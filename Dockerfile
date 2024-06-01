@@ -2,7 +2,7 @@
 FROM openjdk:17-jdk-slim
 
 # Set the Maven version
-ARG MAVEN_VERSION=3.9.2
+ARG MAVEN_VERSION=3.9.4
 
 # Install required packages
 RUN apt-get update && \
