@@ -1,56 +1,61 @@
-# Use the official Ubuntu base image
-FROM ubuntu:20.04
+# Use an official OpenJDK runtime as a parent image
+FROM openjdk:17-jdk-slim
 
-# Set environment variables to non-interactive for the installation process
-ENV DEBIAN_FRONTEND=noninteractive
+# Set the Maven version
+ARG MAVEN_VERSION=3.9.2
 
-# Update the package list and install basic packages
+# Install required packages
 RUN apt-get update && \
-    apt-get install -y \
-    curl \
-    wget \
-    unzip \
-    gnupg \
-    software-properties-common \
-    apt-transport-https \
-    ca-certificates \
-    lsb-release
+    apt-get install -y curl unzip git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Maven
+RUN curl -fsSL https://downloads.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    | tar -xz -C /opt && \
+    ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/maven
+
+# Set environment variables for Maven
+ENV MAVEN_HOME /opt/maven
+ENV PATH ${MAVEN_HOME}/bin:${PATH}
 
 # Install Azure CLI
 RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
-# Install AWS CLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install && \
-    rm -rf awscliv2.zip aws
+# Install SonarQube CLI
+RUN curl -sL https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip \
+    -o sonar-scanner-cli.zip && \
+    unzip sonar-scanner-cli.zip && \
+    mv sonar-scanner-4.6.2.2472-linux /opt/sonar-scanner && \
+    rm sonar-scanner-cli.zip
 
-# Install Terraform
-RUN wget https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip && \
-    unzip terraform_1.5.0_linux_amd64.zip && \
-    mv terraform /usr/local/bin/ && \
-    rm terraform_1.5.0_linux_amd64.zip
+# Set environment variables for SonarQube CLI
+ENV SONAR_SCANNER_HOME /opt/sonar-scanner
+ENV PATH ${SONAR_SCANNER_HOME}/bin:${PATH}
 
-# Install Maven
-RUN apt-get install -y maven
+# Install JaCoCo (latest version)
+RUN curl -sL https://repo1.maven.org/maven2/org/jacoco/jacoco/0.8.7/jacoco-0.8.7.zip \
+    -o jacoco.zip && \
+    unzip jacoco.zip -d /opt/jacoco && \
+    rm jacoco.zip
 
-# Install .NET SDK
-RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    rm packages-microsoft-prod.deb && \
-    apt-get update && \
-    apt-get install -y dotnet-sdk-6.0
+# Set environment variables for JaCoCo
+ENV JACOCO_HOME /opt/jacoco
+ENV PATH ${JACOCO_HOME}/bin:${PATH}
 
-# Clean up
-RUN apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Install JUnit (JUnit is typically managed by Maven, so no additional installation is needed)
+# This is a placeholder to highlight that JUnit will be included as a dependency in Maven projects
 
 # Verify installations
-RUN az --version && \
-    aws --version && \
-    terraform --version && \
-    mvn -v && \
-    dotnet --version
+RUN java -version && \
+    mvn -version && \
+    az --version && \
+    sonar-scanner --version
 
-# Set the default command to bash
+# Set work directory
+WORKDIR /workspace
+
+# Expose necessary ports (e.g., for debugging or application running)
+EXPOSE 8080
+
+# Define the entry point for the container
 CMD ["bash"]
