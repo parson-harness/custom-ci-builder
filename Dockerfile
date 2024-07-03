@@ -1,3 +1,11 @@
+# Install the following software:
+# OpenJDK 17
+# Maven 3.9
+# Curl, Unzip, Git
+# Azure CLI
+# Sonarqube CLI
+# JaCoCo
+
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:17-jdk-slim
 
