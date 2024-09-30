@@ -24,8 +24,8 @@ RUN curl -sSLo sonarscanner-cli.zip https://binaries.sonarsource.com/Distributio
     ln -s /opt/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
     rm sonarscanner-cli.zip
 
-# Install Snyk CLI
-RUN curl -sL https://snyk.io/install | bash
+# Install Snyk CLI using npm
+RUN npm install -g snyk
 
 # Add SonarQube scanner and Snyk to PATH
 ENV PATH="$PATH:/opt/sonar-scanner-4.8.0.2856-linux/bin:/root/.local/bin"
