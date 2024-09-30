@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     unzip \
-    yamllint
+    yamllint \
+    npm
 
 # Install SonarQube CLI
 RUN curl -sSLo sonarscanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip && \
