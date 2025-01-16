@@ -1,0 +1,51 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: parson-service
+  description: |
+    My Example service which has something to do with APIs and database.
+  links:
+    - title: Website
+      url: http://harness.io
+  annotations:
+    github.com/project-slug: harnessworkshop/idp-workshop
+    backstage.io/techdocs-ref: dir:../
+    lighthouse.com/website-url: https://harness.io
+    #For Harness CI/CD plugins - Start
+    #harness.io/pipelines: |
+    #  Build and Deploy: https://workshop.harness.io/ng/account/IFG41DWvSnaRLOVNB2uesg/home/orgs/idp/projects/SelfService_Onboarding/pipelines/OnboardAppPipeline/pipeline-studio?storeType=INLINE
+    #  Infrastructure: https://app.harness.io/ng/account/6_vVHzo9Qeu9fXvj-AcbCQ/module/cd/orgs/default/projects/Platform_Demo/pipelines/IaCM_Provision_EC2_Instance/pipeline-studio?storeType=INLINE
+    #harness.io/services: |
+    #  boutique_frontend: https://app.harness.io/ng/account/6_vVHzo9Qeu9fXvj-AcbCQ/module/cd/orgs/default/projects/Platform_Demo/services/Boutique_Frontend
+    #For Harness CI/CD plugins - End
+    #For Harness IACM plugin - Start
+    #harness.io/workspace-url: |
+    #  AWS Staging: https://app.harness.io/ng/account/6_vVHzo9Qeu9fXvj-AcbCQ/module/iacm/orgs/default/projects/Platform_Demo/workspaces/AWS_Workspace_Staging/resources
+    #  Production: https://app.harness.io/ng/account/6_vVHzo9Qeu9fXvj-AcbCQ/module/iacm/orgs/default/projects/Platform_Demo/workspaces/AWS_EC2/resources
+    #For Harness IACM plugin - End
+    ## For Feature Flags plugin - Start
+    #harness.io/project-url: https://app.harness.io/ng/account/6_vVHzo9Qeu9fXvj-AcbCQ/cd/orgs/default/projects/Platform_Demo/experiments
+    ## For Feature Flags plugin - End
+    ## Kubernetes Plugin - Start
+    #backstage.io/kubernetes-label-selector: 'backstage.io/kubernetes-id=boutique-frontend'
+    #backstage.io/kubernetes-id: boutique-frontend
+    ## Kubernetes Plugin - End 
+    ## Pagerduty Plugin - Start
+    #pagerduty.com/service-id: PGXMVMC
+    ## Pagerduty Plugin - End
+    ## Jira plugin - Start
+    #jira/project-key: IDP
+    ## Jira plugin - End
+  tags:
+    - yournamehere
+spec:
+  type: service
+  owner: change-value
+  lifecycle: experimental
+  consumesApis:
+    - spotify
+  providesApis:
+    - petstore
+#  system: yournamehere-system
+#  dependsOn:
+#    - component:default/yournamehere-service
