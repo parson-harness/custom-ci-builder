@@ -42,7 +42,10 @@ RUN wget https://github.com/opentofu/opentofu/releases/download/v${TOFU_VERSION}
 
 # Install TFLint
 ENV TFLINT_VERSION=0.51.1
-RUN curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+RUN curl -L "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip" -o tflint.zip && \
+    unzip tflint.zip && \
+    mv tflint /usr/local/bin/ && \
+    rm tflint.zip
 
 # Install kubectl
 ENV KUBECTL_VERSION=1.30.1
@@ -60,22 +63,25 @@ RUN wget https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-li
 RUN pip3 install checkov
 
 # Install Terrascan
-RUN curl -L https://github.com/tenable/terrascan/releases/latest/download/terrascan_Linux_x86_64.tar.gz | tar -xz && \
-    mv terrascan /usr/local/bin/
+ENV TERRASCAN_VERSION=1.19.1
+RUN curl -L https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_Linux_x86_64.tar.gz | \
+    tar -xz && mv terrascan /usr/local/bin/
 
 # Install OPA (Open Policy Agent)
 RUN curl -L -o /usr/local/bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64 && \
     chmod +x /usr/local/bin/opa
 
 # Install Conftest
-RUN wget https://github.com/open-policy-agent/conftest/releases/latest/download/conftest_Linux_x86_64.tar.gz && \
+ENV CONFTEST_VERSION=0.47.0
+RUN wget https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_Linux_x86_64.tar.gz && \
     tar -xzf conftest_Linux_x86_64.tar.gz && \
     mv conftest /usr/local/bin/ && \
     rm conftest_Linux_x86_64.tar.gz
 
 # Install Wiz CLI
-RUN curl -sSL https://wizcli.app/install.sh | bash && \
-    mv wiz /usr/local/bin/wiz
+ENV WIZCLI_VERSION=1.0.9
+RUN wget https://wizcli-downloads.s3.amazonaws.com/linux/wiz-${WIZCLI_VERSION} -O /usr/local/bin/wiz && \
+    chmod +x /usr/local/bin/wiz
 
 # Install Terragrunt
 ENV TERRAGRUNT_VERSION=0.56.4
