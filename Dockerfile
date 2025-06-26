@@ -62,22 +62,6 @@ RUN wget https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-li
 # Install Checkov
 RUN pip3 install checkov
 
-# Install Terrascan
-ENV TERRASCAN_VERSION=1.19.1
-RUN curl -L https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_Linux_x86_64.tar.gz | \
-    tar -xz && mv terrascan /usr/local/bin/
-
-# Install OPA (Open Policy Agent)
-RUN curl -L -o /usr/local/bin/opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64 && \
-    chmod +x /usr/local/bin/opa
-
-# Install Conftest
-ENV CONFTEST_VERSION=0.47.0
-RUN wget https://github.com/open-policy-agent/conftest/releases/download/v${CONFTEST_VERSION}/conftest_Linux_x86_64.tar.gz && \
-    tar -xzf conftest_Linux_x86_64.tar.gz && \
-    mv conftest /usr/local/bin/ && \
-    rm conftest_Linux_x86_64.tar.gz
-
 # Install Wiz CLI
 ENV WIZCLI_VERSION=1.0.9
 RUN wget https://wizcli-downloads.s3.amazonaws.com/linux/wiz-${WIZCLI_VERSION} -O /usr/local/bin/wiz && \
@@ -95,9 +79,6 @@ RUN terraform -version && \
     tflint --version && \
     tfsec --version && \
     checkov --version && \
-    terrascan version && \
-    opa version && \
-    conftest --version && \
     terragrunt -version && \
     kubectl version --client && \
     az version && \
