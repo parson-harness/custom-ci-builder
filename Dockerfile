@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     sudo \
     sed \
-    awk \
+    gawk \
     bash \
     coreutils \
     && rm -rf /var/lib/apt/lists/*
