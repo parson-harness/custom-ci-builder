@@ -63,8 +63,7 @@ RUN wget https://github.com/aquasecurity/tfsec/releases/latest/download/tfsec-li
 RUN pip3 install checkov
 
 # Install Wiz CLI
-ENV WIZCLI_VERSION=1.0.9
-RUN wget https://wizcli-downloads.s3.amazonaws.com/linux/wiz-${WIZCLI_VERSION} -O /usr/local/bin/wiz && \
+RUN curl -L https://downloads.wiz.io/wizcli/latest/wizcli-linux-amd64 -o /usr/local/bin/wiz && \
     chmod +x /usr/local/bin/wiz
 
 # Install Terragrunt
