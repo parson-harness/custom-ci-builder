@@ -73,14 +73,6 @@ RUN wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGR
     chmod +x terragrunt_linux_amd64 && \
     mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
-# Install Terrascan
-ENV TERRASCAN_VERSION=1.18.7
-RUN wget https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz && \
-    tar -xzf terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz terrascan && \
-    mv terrascan /usr/local/bin/ && \
-    chmod +x /usr/local/bin/terrascan && \
-    rm terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz
-
 # Install Google Cloud CLI
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" \
     | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
@@ -102,6 +94,14 @@ RUN wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-s
     mv sonar-scanner-${SONAR_SCANNER_VERSION}-linux /opt/sonar-scanner && \
     ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
     rm sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip
+
+# Install Terrascan
+ENV TERRASCAN_VERSION=1.18.7
+RUN wget https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz && \
+    tar -xzf terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz terrascan && \
+    mv terrascan /usr/local/bin/ && \
+    chmod +x /usr/local/bin/terrascan && \
+    rm terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz
 
 # Verify installations
 RUN terraform -version && \
