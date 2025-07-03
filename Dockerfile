@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gawk \
     bash \
     coreutils \
+    openjdk-11-jre \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Terraform
@@ -72,13 +73,43 @@ RUN wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGR
     chmod +x terragrunt_linux_amd64 && \
     mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
-# Optional: Print versions for verification
+# Install Terrascan
+RUN wget https://github.com/tenable/terrascan/releases/latest/download/terrascan_linux_amd64 -O /usr/local/bin/terrascan && \
+    chmod +x /usr/local/bin/terrascan
+
+# Install Google Cloud CLI
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" \
+    | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+    | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - && \
+    apt-get update && apt-get install -y google-cloud-sdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install AWS CLI v2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
+
+# Install SonarQube Scanner CLI
+ENV SONAR_SCANNER_VERSION=5.0.1.3006
+RUN wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
+    unzip sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
+    mv sonar-scanner-${SONAR_SCANNER_VERSION}-linux /opt/sonar-scanner && \
+    ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner && \
+    rm sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip
+
+# Verify installations
 RUN terraform -version && \
     tofu version && \
     tflint --version && \
     tfsec --version && \
     checkov --version && \
     terragrunt -version && \
+    terrascan version && \
+    gcloud version && \
+    aws --version && \
+    sonar-scanner --version && \
     kubectl version --client && \
     az version && \
     wiz version
