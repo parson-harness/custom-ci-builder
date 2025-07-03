@@ -74,8 +74,12 @@ RUN wget https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGR
     mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
 
 # Install Terrascan
-RUN wget https://github.com/tenable/terrascan/releases/latest/download/terrascan_linux_amd64 -O /usr/local/bin/terrascan && \
-    chmod +x /usr/local/bin/terrascan
+ENV TERRASCAN_VERSION=1.18.7
+RUN wget https://github.com/tenable/terrascan/releases/download/v${TERRASCAN_VERSION}/terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz && \
+    tar -xzf terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz terrascan && \
+    mv terrascan /usr/local/bin/ && \
+    chmod +x /usr/local/bin/terrascan && \
+    rm terrascan_${TERRASCAN_VERSION}_Linux_x86_64.tar.gz
 
 # Install Google Cloud CLI
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" \
